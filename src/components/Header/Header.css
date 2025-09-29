@@ -1,0 +1,35 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 50px;
+  background-color: #000;
+  color: #fff;
+  position: relative;
+}
+
+.header h1 {
+  margin: 0;
+  color: red;
+  position: absolute;
+  left: 50px;
+}
+
+.header__nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display:flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.header__nav li {
+  margin-left: 20px;
+}
+
+.header__nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
