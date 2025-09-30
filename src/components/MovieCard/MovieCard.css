@@ -1,7 +1,8 @@
 /* Card Individual do Filme */
 .movie-card {
   position: relative;
-  width: 300px !important; /* Aumentamos para 300px e forçamos a mudança */
+  flex-shrink: 0;
+  width: 200px;
   height: auto;
   margin: 15px;
   border-radius: 8px;
@@ -13,55 +14,51 @@
   flex-direction: column;
 }
 
-/* Os outros estilos não precisam ser alterados, pode seguir a partir daqui */
-
 .movie-card:hover {
   transform: scale(1.05);
 }
 
+/* Imagem do Poster */
 .movie-card__poster {
-  width: 100%;
-  height: 350px;
+  width: 200px;
+  height: 300px;
   object-fit: cover;
   display: block;
 }
 
+/* Informações do Filme (Título, Data, Botão) */
 .movie-card__info {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 10px;
+  padding: 10px 20px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
   color: #fff;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   transition: opacity 0.3s ease;
   opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important; /* Força o alinhamento para a esquerda */
+  justify-content: flex-end;
 }
 
+/* Efeito ao passar o mouse */
 .movie-card:hover .movie-card__info {
   opacity: 1;
 }
 
+/* Título do Filme */
 .movie-card__title {
   font-size: 1.1rem;
   margin: 0 0 8px 0;
   line-height: 1.3;
-  text-align: center;
   word-break: break-word;
   white-space: normal;
+  text-align: left !important; /* Força o alinhamento para a esquerda */
 }
 
-.movie-card__release-date {
-  font-size: 0.9rem;
-  color: #a0a0a0;
-  margin: 0 0 10px 0;
-}
-
+/* Botão de Detalhes */
 .movie-card__button {
   background-color: #e50914;
   color: white;
@@ -70,6 +67,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-right: auto !important; /* Força o botão para a esquerda */
 }
 
 .movie-card__button:hover {

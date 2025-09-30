@@ -3,6 +3,12 @@
 .row {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 50px), rgba(30, 30, 30, 0.5);
   padding: 20px 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.row:hover {
+  transform: scale(1.01); /* Faz a linha "levantar" ligeiramente */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* Adiciona uma sombra para dar profundidade */
 }
 
 .row__container {
