@@ -1,9 +1,8 @@
 .App {
-  background-color: #000; /* Define a cor de fundo da página inteira como preta */
-  color: #fff; /* Define a cor padrão do texto como branco */
-  min-height: 100vh; /* Garante que o fundo cubra a tela toda */
+  background-color: #000;
+  color: #fff;
+  min-height: 100vh;
 }
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;

@@ -6,8 +6,7 @@ function Header() {
   return (
     <header className="header">
       <img src={logo} alt="StreamFlix Logo" className="header__logo" />
-
-      <div className="header__nav-wrapper"> {/* <-- Novo div para agrupar os elementos */}
+      <div className="header__nav-wrapper">
         <nav className="header__nav">
           <ul>
             <li><a href="#home">Início</a></li>
@@ -16,7 +15,6 @@ function Header() {
             <li><a href="#new">Novidades</a></li>
           </ul>
         </nav>
-
         <div className="header__search">
           <form>
             <input type="text" placeholder="Buscar filmes..." />
@@ -27,5 +25,4 @@ function Header() {
     </header>
   );
 }
-
 export default Header;

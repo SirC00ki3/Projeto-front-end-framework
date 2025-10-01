@@ -2,15 +2,12 @@ import React from 'react';
 import './Hero.css';
 
 function Hero({ movie }) {
-  if (!movie) { // Se não houver filme, não renderiza nada
+  if (!movie) {
     return null;
   }
-
-  // Constrói a URL da imagem de fundo
   const backgroundStyle = {
     backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie.backdrop_path}")`,
   };
-
   return (
     <section className="hero" style={backgroundStyle}>
       <div className="hero__content">
@@ -24,5 +21,4 @@ function Hero({ movie }) {
     </section>
   );
 }
-
 export default Hero;

@@ -10,54 +10,30 @@ import requests from './api/requests';
 function App() {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [bannerMovie, setBannerMovie] = useState(null);
-  const [comedyMovies, setComedyMovies] = useState([]); // Novo estado para Comédia
-  const [horrorMovies, setHorrorMovies] = useState([]);  // Novo estado para Terror
-  const [romanceMovies, setRomanceMovies] = useState([]); // Novo estado para Romance
+  const [comedyMovies, setComedyMovies] = useState([]);
+  const [horrorMovies, setHorrorMovies] = useState([]);
+  const [romanceMovies, setRomanceMovies] = useState([]);
 
-  // Efeito para buscar filmes em alta
   useEffect(() => {
-    async function fetchTrendingData() {
-      const request = await tmdb.get(requests.fetchTrending);
-      setTrendingMovies(request.data.results);
-    }
-    fetchTrendingData();
-  }, []);
-
-  // Efeito para buscar filme do banner
-  useEffect(() => {
-    async function fetchBannerMovie() {
-      const request = await tmdb.get(requests.fetchNetflixOriginals);
-      const randomMovie = request.data.results[Math.floor(Math.random() * request.data.results.length)];
+    async function fetchMovies() {
+      // Fetching all movies at once
+      const trendingRequest = await tmdb.get(requests.fetchTrending);
+      setTrendingMovies(trendingRequest.data.results);
+      
+      const netflixOriginals = await tmdb.get(requests.fetchNetflixOriginals);
+      const randomMovie = netflixOriginals.data.results[Math.floor(Math.random() * netflixOriginals.data.results.length)];
       setBannerMovie(randomMovie);
-    }
-    fetchBannerMovie();
-  }, []);
 
-  // Efeito para buscar filmes de Comédia
-  useEffect(() => {
-    async function fetchComedyMovies() {
-      const request = await tmdb.get(requests.fetchComedyMovies);
-      setComedyMovies(request.data.results);
-    }
-    fetchComedyMovies();
-  }, []);
+      const comedyRequest = await tmdb.get(requests.fetchComedyMovies);
+      setComedyMovies(comedyRequest.data.results);
 
-  // Efeito para buscar filmes de Terror
-  useEffect(() => {
-    async function fetchHorrorMovies() {
-      const request = await tmdb.get(requests.fetchHorrorMovies);
-      setHorrorMovies(request.data.results);
-    }
-    fetchHorrorMovies();
-  }, []);
+      const horrorRequest = await tmdb.get(requests.fetchHorrorMovies);
+      setHorrorMovies(horrorRequest.data.results);
 
-  // Efeito para buscar filmes de Romance
-  useEffect(() => {
-    async function fetchRomanceMovies() {
-      const request = await tmdb.get(requests.fetchRomanceMovies);
-      setRomanceMovies(request.data.results);
+      const romanceRequest = await tmdb.get(requests.fetchRomanceMovies);
+      setRomanceMovies(romanceRequest.data.results);
     }
-    fetchRomanceMovies();
+    fetchMovies();
   }, []);
 
   return (
