@@ -1,4 +1,4 @@
-const API_KEY = "8915c66b25d806b9b6608d79bcf74436"; // <-- Cole sua chave de API do TMDb aqui
+export const API_KEY = "8915c66b25d806b9b6608d79bcf74436"; // <-- Cole sua chave de API do TMDb aqui
 
 const requests = {
   fetchTrending: `/trending/all/week?api_key=${API_KEY}&language=pt-BR`,
@@ -9,6 +9,8 @@ const requests = {
   fetchHorrorMovies: `/discover/movie?api_key=${API_KEY}&with_genres=27`,
   fetchRomanceMovies: `/discover/movie?api_key=${API_KEY}&with_genres=10749`,
   fetchDocumentaries: `/discover/movie?api_key=${API_KEY}&with_genres=99`,
+  fetchSearch: `/search/movie?api_key=${API_KEY}&language=pt-BR&query=`,
+  fetchMovieDetails: `/movie/`,
 };
 
 export default requests;

@@ -1,0 +1,20 @@
+/* src/pages/MyListPage.css */
+.mylist-page-container {
+  padding: 120px 50px 50px 50px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* min-height: 100vh;  <-- REMOVIDO PARA EVITAR FAIXA BRANCA */
+}
+
+.mylist-title {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.mylist-message {
+  font-size: 1.5rem;
+  color: #ccc;
+}
