@@ -1,9 +1,12 @@
 import React from 'react';
 import './Header.css';
 import logo from "../../imagens/icons/logo.png";
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
-// Recebe as funções de busca como propriedades (props)
+// Importa o ícone de lupa do Font Awesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons'; // Ícone de lupa
+
 function Header({ onSearchSubmit, onSearchChange }) { 
   
   const getNavLinkClass = ({ isActive }) => {
@@ -12,31 +15,34 @@ function Header({ onSearchSubmit, onSearchChange }) {
 
   return (
     <header className="header">
-      <img src={logo} alt="StreamFlix Logo" className="header__logo" />
-
-      <div className="header__nav-wrapper">
+      <div className="header__left">
+        <img src={logo} alt="StreamFlix Logo" className="header__logo" />
+        
         <nav className="header__nav">
           <ul>
-            <li><NavLink to="/" className={getNavLinkClass} end>Início</NavLink></li>
+            <li><NavLink to="/" className={getNavLinkClass} end>Início</NavLink></li> 
             <li><NavLink to="/series" className={getNavLinkClass}>Séries</NavLink></li>
             <li><NavLink to="/movies" className={getNavLinkClass}>Filmes</NavLink></li>
             <li><NavLink to="/new" className={getNavLinkClass}>Novidades</NavLink></li>
             <li><NavLink to="/mylist" className={getNavLinkClass}>Minha Lista</NavLink></li>
           </ul>
         </nav>
+      </div>
 
+      <div className="header__right">
         <div className="header__search">
-          {/* Conecta o envio do formulário à função onSearchSubmit */}
           <form onSubmit={onSearchSubmit}>
             <input 
               type="text" 
               placeholder="Buscar filmes..." 
-              // Conecta a digitação à função onSearchChange
               onChange={(e) => onSearchChange(e.target.value)} 
             />
-            <button type="submit">Buscar</button>
+            {/* Agora o botão de busca tem o ícone de lupa */}
+            <button type="submit" aria-label="Buscar"><FontAwesomeIcon icon={faSearch} /></button>
           </form>
         </div>
+        
+        <Link to="/login" className="header__login-button">Entrar</Link>
       </div>
     </header>
   );

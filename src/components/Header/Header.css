@@ -1,25 +1,32 @@
+/* Container principal */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 50px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  z-index: 100;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 100;
+  padding: 10px 50px; /* Padding vertical um pouco menor */
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
 }
 
-.header__logo {
-  height: 80px;
-}
-
-.header__nav-wrapper {
+/* --- LADO ESQUERDO --- */
+.header__left {
   display: flex;
   align-items: center;
   gap: 30px;
+}
+
+.header__logo {
+  height: 70px; /* Aumentado para destacar bem a logo */
+  width: auto;
+  cursor: pointer;
+  object-fit: contain; /* Garante que a imagem não fique esticada */
 }
 
 .header__nav ul {
@@ -27,56 +34,127 @@
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 20px;
+  gap: 25px; /* Mais espaço entre os links */
 }
 
-.header__nav li a {
-  color: #fff;
+.nav-link {
+  color: #e5e5e5;
   text-decoration: none;
-  font-weight: bold;
+  font-size: 1.1rem; /* Aumentado */
   transition: color 0.3s;
 }
 
-.header__nav li a:hover {
-  color: #e50914;
+.nav-link:hover {
+  color: #b3b3b3;
 }
 
+.active-link {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* --- LADO DIREITO --- */
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Estilização da Barra de Busca */
 .header__search {
   display: flex;
   align-items: center;
 }
 
-.header__search input {
-  padding: 8px;
-  border: 1px solid #fff;
-  background-color: transparent;
-  color: #fff;
-  border-radius: 4px;
-  outline: none; /* Remove a borda padrão ao focar */
-  transition: all 0.3s ease;
+/* O formulário agora é a "caixa" visual */
+.header__search form {
+  display: flex;
+  align-items: center;
+  background-color: #000; /* Fundo preto */
+  border: 1px solid #fff; /* Borda branca ao redor de tudo */
+  border-radius: 4px; /* Arredonda a caixa inteira */
+  padding: 5px; /* Espaço interno */
+  height: 36px; /* Altura fixa da barra completa */
+  box-sizing: border-box;
+  transition: border-color 0.3s;
 }
 
-.header__search input:focus {
-  border-color: #e50914; /* Altera a cor da borda ao focar */
-  box-shadow: 0 0 5px #e50914; /* Adiciona um brilho */
+/* Efeito de brilho na caixa inteira quando clica */
+.header__search form:focus-within {
+  border-color: #e50914;
+}
+
+.header__search input {
+  border: none; /* Remove borda individual */
+  background-color: transparent; /* Fundo transparente */
+  color: #fff;
+  outline: none; /* Remove linha azul de foco */
+  font-size: 0.9rem;
+  padding: 0 10px;
+  width: 200px; /* Largura da área de texto */
 }
 
 .header__search button {
-  padding: 8px 12px;
-  margin-right: 70px;
-  margin-left: 10px;
-  border: none;
-  background-color: #e50914;
-  color: white;
-  border-radius: 4px;
+  border: none; /* Remove borda individual */
+  background-color: transparent; /* Fundo transparente */
+  color: #fff; /* Cor da lupa branca */
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
 }
 
 .header__search button:hover {
-  background-color: #ff000d;
+  transform: scale(1.1); /* Lupa aumenta levemente ao passar o mouse */
+  color: #e50914; /* Lupa fica vermelha no hover */
 }
 
-.header__search button:active {
-  transform: translateY(1px); /* Efeito de "clique" */
+/* Botão Entrar */
+.header__login-button {
+  background-color: #e50914;
+  color: white !important;
+  text-decoration: none;
+  padding: 0 15px; 
+  border-radius: 3px;
+  font-weight: normal;
+  font-size: 0.85rem;
+  transition: background-color 0.3s;
+  height: 30px; /* Mesma altura da busca para alinhar */
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.header__login-button:hover {
+  background-color: #f40612;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 20px;
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+  
+  .header__left, .header__right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header__nav {
+    display: none; 
+  }
+  
+  .header__search input {
+    width: calc(100% - 40px); /* Ajusta largura para caber o botão */
+  }
+
+  .header__search button {
+    width: 40px; /* Largura fixa para o botão da lupa */
+  }
 }
