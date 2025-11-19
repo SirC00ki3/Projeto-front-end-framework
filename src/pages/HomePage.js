@@ -13,7 +13,6 @@ function HomePage({ myList, addToList }) {
   const [horrorMovies, setHorrorMovies] = useState([]);
   const [romanceMovies, setRomanceMovies] = useState([]);
   
-  // Novos estados para a busca
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
@@ -38,30 +37,35 @@ function HomePage({ myList, addToList }) {
     fetchMovies();
   }, []);
   
-  // Função que faz a busca na API
   const handleSearch = async (e) => {
-    e.preventDefault(); // Evita que a página recarregue
+    e.preventDefault();
     if (searchTerm.trim() === '') {
-      setSearchResults([]); // Se estiver vazio, limpa os resultados
+      setSearchResults([]);
       return;
     }
-    // Busca na API usando o endpoint de pesquisa
     const request = await tmdb.get(`${requests.fetchSearch}${searchTerm}`);
     setSearchResults(request.data.results);
   };
 
+  // NOVA FUNÇÃO: Limpa a busca e os resultados
+  const resetSearch = () => {
+    setSearchTerm('');      // Limpa o texto
+    setSearchResults([]);   // Limpa os filmes encontrados
+  };
+
   return (
     <>
-      {/* Passamos as funções de busca para o Header */}
+      {/* Passamos 'searchTerm' e 'onReset' para o Header */}
       <Header 
         myList={myList} 
         onSearchSubmit={handleSearch} 
-        onSearchChange={setSearchTerm} 
+        onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        onReset={resetSearch}
       />
       
       <Hero movie={bannerMovie} addToList={addToList} />
       
-      {/* Lógica de Exibição: Se tiver resultados, mostra eles. Se não, mostra as categorias normais */}
       {searchResults.length > 0 ? (
         <div style={{ marginTop: '20px' }}>
             <Row title={`Resultados para "${searchTerm}"`} movies={searchResults} />

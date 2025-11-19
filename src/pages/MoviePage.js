@@ -1,38 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import tmdb from '../api/tmdb';
-import requests, { API_KEY } from '../api/requests';
+import { API_KEY } from '../api/requests';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import YouTube from 'react-youtube';
 import './MoviePage.css';
 
 function MoviePage({ addToList, removeFromList, myList }) {
-  const { id } = useParams();
-  const [movie, setMovie] = useState(null);
+  // Agora pegamos também o 'type' (movie ou tv) da URL
+  const { type, id } = useParams(); 
+  const [content, setContent] = useState(null); // Mudei o nome de 'movie' para 'content' pois pode ser série
   const [trailerUrl, setTrailerUrl] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Verifica se o filme já está na lista (seguro contra undefined)
-  const isMovieInList = myList ? myList.some((item) => item.id.toString() === id) : false;
+
+  // Verifica se está na lista
+  const isInList = myList ? myList.some((item) => item.id.toString() === id) : false;
 
   useEffect(() => {
-    async function fetchMovieDetails() {
+    async function fetchData() {
       try {
-        const response = await tmdb.get(`${requests.fetchMovieDetails}${id}?api_key=${API_KEY}&language=pt-BR`);
-        setMovie(response.data);
+        // Usa o 'type' para buscar na rota certa (movie ou tv)
+        const response = await tmdb.get(`/${type}/${id}?api_key=${API_KEY}&language=pt-BR`);
+        setContent(response.data);
       } catch (error) {
         console.error("Erro ao buscar detalhes:", error);
       }
     }
-    fetchMovieDetails();
-  }, [id]);
+    fetchData();
+  }, [type, id]);
 
   useEffect(() => {
     async function fetchTrailer() {
       try {
-        const response = await tmdb.get(`/movie/${id}/videos?api_key=${API_KEY}`);
-        const video = response.data.results.find(vid => vid.type === "Trailer" && vid.site === "YouTube");
+        // Busca o trailer na rota certa também
+        const response = await tmdb.get(`/${type}/${id}/videos?api_key=${API_KEY}`);
+        
+        // Tenta achar trailer oficial
+        let video = response.data.results.find(vid => vid.type === "Trailer" && vid.site === "YouTube");
+        // Se não achar, pega qualquer video do Youtube (Teaser, Opening, etc)
+        if (!video) {
+            video = response.data.results.find(vid => vid.site === "YouTube");
+        }
+
         if (video) {
           setTrailerUrl(video.key);
         }
@@ -41,14 +51,14 @@ function MoviePage({ addToList, removeFromList, myList }) {
       }
     }
     fetchTrailer();
-  }, [id]);
+  }, [type, id]);
 
-  if (!movie) {
-    return <div>Carregando...</div>;
+  if (!content) {
+    return <div className="loading-screen">Carregando...</div>;
   }
 
   const backgroundStyle = {
-    backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie.backdrop_path || movie.poster_path}")`,
+    backgroundImage: `url("https://image.tmdb.org/t/p/original/${content.backdrop_path || content.poster_path}")`,
   };
 
   const opts = {
@@ -62,17 +72,44 @@ function MoviePage({ addToList, removeFromList, myList }) {
       <Header myList={myList} />
       <div className="movie-page-container" style={backgroundStyle}>
         <div className="movie-details-card">
-          <h1 className="movie-page-title">{movie.title || movie.name}</h1>
-          <p className="movie-page-overview">{movie.overview}</p>
-          <p className="movie-page-meta">Nota: {movie.vote_average}</p>
-          <div className="movie-page-buttons">
-            {trailerUrl && (
-              <button className="watch-button" onClick={() => setIsModalOpen(true)}>▶ Assistir Agora</button>
+          {/* Usa title (filme) ou name (série) */}
+          <h1 className="movie-page-title">{content.title || content.name}</h1>
+          
+          <p className="movie-page-overview">
+            {content.overview || "Sinopse não disponível em português."}
+          </p>
+          
+          <div className="movie-meta-info">
+            <p className="movie-page-meta">
+              Data: {content.release_date || content.first_air_date ? (content.release_date || content.first_air_date).substring(0, 4) : "N/A"}
+            </p>
+            <p className="movie-page-meta">Nota: {Number(content.vote_average).toFixed(1)}</p>
+            
+            {/* Mostra temporadas se for série */}
+            {content.number_of_seasons && (
+                <p className="movie-page-meta" style={{color: '#46d369'}}>
+                    {content.number_of_seasons} Temporada{content.number_of_seasons > 1 ? 's' : ''}
+                </p>
             )}
-            {isMovieInList ? (
-              <button className="watch-button" style={{marginLeft: '10px', backgroundColor: '#555'}} onClick={() => removeFromList(movie.id)}>Remover da Lista</button>
+          </div>
+
+          <div className="movie-page-buttons">
+            {/* Botão Assistir (Só aparece se tiver trailer) */}
+            {trailerUrl ? (
+              <button className="watch-button" onClick={() => setIsModalOpen(true)}>▶ Assistir Agora</button>
             ) : (
-              <button className="watch-button" style={{marginLeft: '10px', backgroundColor: '#555'}} onClick={() => addToList(movie)}>Minha Lista</button>
+               <button className="watch-button disabled" style={{opacity: 0.5, cursor: 'not-allowed'}}>Sem Trailer</button>
+            )}
+
+            {/* Botão Lista */}
+            {isInList ? (
+              <button className="watch-button remove-btn" style={{marginLeft: '15px', backgroundColor: '#555'}} onClick={() => removeFromList(content.id)}>
+                Remover da Lista
+              </button>
+            ) : (
+              <button className="watch-button add-btn" style={{marginLeft: '15px', backgroundColor: 'rgba(109, 109, 110, 0.7)'}} onClick={() => addToList(content)}>
+                + Minha Lista
+              </button>
             )}
           </div>
         </div>

@@ -1,13 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // 1. Importa o Link
+import { Link } from 'react-router-dom';
 import './MovieCard.css';
 
 function MovieCard({ movie }) {
   const imageUrl = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
+  
+  // Lógica inteligente para descobrir o tipo
+  // Se tiver 'title', é movie. Se tiver 'name', é tv.
+  const type = movie.title ? 'movie' : 'tv';
 
   return (
-    // 2. Envolve tudo com o Link apontando para a rota /movie/:id
-    <Link to={`/movie/${movie.id}`} className="movie-card-link">
+    // O Link agora manda o tipo correto para a URL
+    <Link to={`/watch/${type}/${movie.id}`} className="movie-card-link">
       <div className="movie-card">
         <img
           className="movie-card__poster"

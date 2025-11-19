@@ -17,18 +17,27 @@ function Hero({ movie, addToList }) {
   };
 
   // Função para buscar e abrir o trailer
+  // Função para buscar e abrir o trailer
   const handleWatch = async () => {
     if (trailerUrl) {
-      setIsModalOpen(true); // Se já buscou antes, só abre
+      setIsModalOpen(true);
     } else {
       try {
         const response = await tmdb.get(`/movie/${movie.id}/videos?api_key=${API_KEY}`);
-        const video = response.data.results.find(vid => vid.type === "Trailer" && vid.site === "YouTube");
+        
+        // Tenta achar um trailer oficial primeiro
+        let video = response.data.results.find(vid => vid.type === "Trailer" && vid.site === "YouTube");
+        
+        // Se não achar trailer, pega QUALQUER vídeo do YouTube (Teaser, Clip, etc.)
+        if (!video) {
+          video = response.data.results.find(vid => vid.site === "YouTube");
+        }
+
         if (video) {
           setTrailerUrl(video.key);
           setIsModalOpen(true);
         } else {
-          alert("Trailer não disponível para este filme.");
+          alert("Desculpe, não encontramos nenhum vídeo para este título.");
         }
       } catch (error) {
         console.error("Erro ao buscar trailer:", error);

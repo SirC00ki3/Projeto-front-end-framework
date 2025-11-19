@@ -2,12 +2,11 @@ import React from 'react';
 import './Header.css';
 import logo from "../../imagens/icons/logo.png";
 import { NavLink, Link } from 'react-router-dom';
-
-// Importa o ícone de lupa do Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons'; // Ícone de lupa
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-function Header({ onSearchSubmit, onSearchChange }) { 
+// Recebe novas props: searchTerm e onReset
+function Header({ onSearchSubmit, onSearchChange, searchTerm, onReset }) { 
   
   const getNavLinkClass = ({ isActive }) => {
     return isActive ? 'nav-link active-link' : 'nav-link';
@@ -16,11 +15,15 @@ function Header({ onSearchSubmit, onSearchChange }) {
   return (
     <header className="header">
       <div className="header__left">
-        <img src={logo} alt="StreamFlix Logo" className="header__logo" />
+        {/* Ao clicar na logo, reseta a busca */}
+        <Link to="/" onClick={onReset}>
+            <img src={logo} alt="StreamFlix Logo" className="header__logo" />
+        </Link>
         
         <nav className="header__nav">
           <ul>
-            <li><NavLink to="/" className={getNavLinkClass} end>Início</NavLink></li> 
+            {/* Ao clicar em Início, reseta a busca */}
+            <li><NavLink to="/" className={getNavLinkClass} onClick={onReset} end>Início</NavLink></li> 
             <li><NavLink to="/series" className={getNavLinkClass}>Séries</NavLink></li>
             <li><NavLink to="/movies" className={getNavLinkClass}>Filmes</NavLink></li>
             <li><NavLink to="/new" className={getNavLinkClass}>Novidades</NavLink></li>
@@ -35,9 +38,10 @@ function Header({ onSearchSubmit, onSearchChange }) {
             <input 
               type="text" 
               placeholder="Buscar filmes..." 
+              // O valor agora é controlado pelo estado da HomePage
+              value={searchTerm || ''} 
               onChange={(e) => onSearchChange(e.target.value)} 
             />
-            {/* Agora o botão de busca tem o ícone de lupa */}
             <button type="submit" aria-label="Buscar"><FontAwesomeIcon icon={faSearch} /></button>
           </form>
         </div>

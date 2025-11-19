@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import MoviePage from './pages/MoviePage';
 import MyListPage from './pages/MyListPage';
-import LoginPage from './pages/LoginPage'; // <-- Importe aqui
+import LoginPage from './pages/LoginPage';
+import MoviesPage from './pages/MoviesPage';
+import SeriesPage from './pages/SeriesPage';
 import './App.css';
 
 function App() {
@@ -33,12 +35,14 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<HomePage myList={myList} addToList={addToList} />} />
+          <Route path="/movies" element={<MoviesPage myList={myList} />} />
+          <Route path="/series" element={<SeriesPage myList={myList} />} />
           
-          {/* Nova Rota de Login */}
-          <Route path="/login" element={<LoginPage />} />
-
-          <Route path="/movie/:id" element={<MoviePage addToList={addToList} removeFromList={removeFromList} myList={myList} />} />
+          {/* MUDANÇA AQUI: A rota agora aceita o tipo (tv ou movie) */}
+          <Route path="/watch/:type/:id" element={<MoviePage addToList={addToList} removeFromList={removeFromList} myList={myList} />} />
+          
           <Route path="/mylist" element={<MyListPage myList={myList} />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
     </Router>

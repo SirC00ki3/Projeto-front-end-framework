@@ -1,0 +1,75 @@
+/* src/pages/MoviesPage.css */
+
+.movies-page-container {
+  padding-top: 100px; /* Espaço para o header */
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  padding-bottom: 50px;
+}
+
+.movies-header {
+  padding: 0 50px; /* Alinha com o resto do site */
+  margin-bottom: 40px;
+}
+
+.movies-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Lista de Botões (Chips) */
+.genre-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.genre-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #666;
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.genre-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: #fff;
+}
+
+.genre-button.active {
+  background-color: #e50914;
+  border-color: #e50914;
+  color: white;
+  font-weight: bold;
+}
+
+/* Área das Fileiras */
+.movies-rows-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaço entre uma fileira e outra */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .movies-header {
+    padding: 0 20px;
+  }
+  
+  .genre-list {
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    flex-wrap: nowrap;
+  }
+  
+  .genre-button {
+    white-space: nowrap;
+  }
+}
