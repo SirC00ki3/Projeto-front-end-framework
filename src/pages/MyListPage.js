@@ -4,10 +4,12 @@ import Footer from '../components/Footer/Footer';
 import Row from '../components/Row/Row';
 import './MyListPage.css';
 
-function MyListPage({ myList }) {
+// Recebe as props de busca
+function MyListPage({ myList, searchTerm, setSearchTerm }) {
   return (
     <>
-      <Header myList={myList} />
+      {/* Repassa as props de busca */}
+      <Header myList={myList} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <div className="mylist-page-container">
         <h1 className="mylist-title" style={{ marginTop: '100px' }}>Minha Lista</h1>
         {myList && myList.length > 0 ? (

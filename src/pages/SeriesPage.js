@@ -6,7 +6,8 @@ import tmdb from '../api/tmdb';
 import { API_KEY } from '../api/requests';
 import './SeriesPage.css';
 
-function SeriesPage({ myList }) {
+// Recebe as props de busca
+function SeriesPage({ myList, searchTerm, setSearchTerm }) {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [genreName, setGenreName] = useState('Todas');
   
@@ -14,7 +15,6 @@ function SeriesPage({ myList }) {
   const [topRatedList, setTopRatedList] = useState([]);
   const [newList, setNewList] = useState([]);
 
-  // IDs de Gêneros específicos para TV (TMDb)
   const genres = [
     { id: '', name: 'Todas' },
     { id: '10759', name: 'Ação e Aventura' },
@@ -35,32 +35,24 @@ function SeriesPage({ myList }) {
   useEffect(() => {
     async function fetchGenreRows() {
       const genreQuery = selectedGenre ? `&with_genres=${selectedGenre}` : '';
-
-      // 1. Séries Populares
       const reqPopular = await tmdb.get(`/discover/tv?api_key=${API_KEY}${genreQuery}&language=pt-BR&sort_by=popularity.desc`);
       setPopularList(reqPopular.data.results);
-
-      // 2. Séries Bem Avaliadas
       const reqTop = await tmdb.get(`/discover/tv?api_key=${API_KEY}${genreQuery}&language=pt-BR&sort_by=vote_average.desc&vote_count.gte=200`);
       setTopRatedList(reqTop.data.results);
-
-      // 3. Novas Séries (Pela data de estreia 'first_air_date')
       const reqNew = await tmdb.get(`/discover/tv?api_key=${API_KEY}${genreQuery}&language=pt-BR&sort_by=first_air_date.desc&vote_count.gte=50`);
       setNewList(reqNew.data.results);
     }
-
     fetchGenreRows();
   }, [selectedGenre]);
 
   return (
     <>
-      <Header myList={myList} />
+      {/* Repassa as props de busca */}
+      <Header myList={myList} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       
       <div className="series-page-container">
         <div className="series-header">
-          {/* Texto Alterado Aqui 👇 */}
           <h1>Categoria: {genreName}</h1>
-          
           <div className="genre-list">
             {genres.map((genre) => (
               <button 
@@ -80,7 +72,6 @@ function SeriesPage({ myList }) {
           <Row title={selectedGenre ? `Novidades de ${genreName}` : "Novos Episódios e Estreias"} movies={newList} />
         </div>
       </div>
-      
       <Footer />
     </>
   );

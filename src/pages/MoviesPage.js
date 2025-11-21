@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import Row from '../components/Row/Row';
+import Row from '../components/Row/Row'; // Importamos o componente de Carrossel
 import tmdb from '../api/tmdb';
 import { API_KEY } from '../api/requests';
 import './MoviesPage.css';
 
-function MoviesPage({ myList }) {
-  // Começa com "Todos" selecionado (ID vazio)
-  const [selectedGenre, setSelectedGenre] = useState(''); 
+// Recebe as props de busca do App.js
+function MoviesPage({ myList, searchTerm, setSearchTerm }) {
+  const [selectedGenre, setSelectedGenre] = useState('');
   const [genreName, setGenreName] = useState('Todos');
   
+  // Estados para as fileiras
   const [popularList, setPopularList] = useState([]);
   const [topRatedList, setTopRatedList] = useState([]);
   const [newList, setNewList] = useState([]);
 
   const genres = [
-    { id: '', name: 'Todos' }, // O ID vazio faz a API buscar geral
+    { id: '', name: 'Todos' },
     { id: '28', name: 'Ação' },
     { id: '35', name: 'Comédia' },
     { id: '27', name: 'Terror' },
     { id: '10749', name: 'Romance' },
-    { id: '878', name: 'Ficção Científica' },
+    { id: '878', name: 'Ficção' },
     { id: '18', name: 'Drama' },
     { id: '16', name: 'Animação' },
   ];
@@ -33,7 +34,6 @@ function MoviesPage({ myList }) {
 
   useEffect(() => {
     async function fetchGenreRows() {
-      // Se o ID for vazio (Todos), a API busca sem filtro de gênero
       const genreQuery = selectedGenre ? `&with_genres=${selectedGenre}` : '';
 
       // 1. Populares
@@ -54,11 +54,10 @@ function MoviesPage({ myList }) {
 
   return (
     <>
-      <Header myList={myList} />
+      <Header myList={myList} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       
       <div className="movies-page-container">
         <div className="movies-header">
-          {/* Texto Alterado */}
           <h1>Categoria: {genreName}</h1>
           
           <div className="genre-list">
@@ -74,8 +73,8 @@ function MoviesPage({ myList }) {
           </div>
         </div>
 
+        {/* Área das Fileiras (Rows) */}
         <div className="movies-rows-area">
-          {/* Ajuste no título das linhas para ficar mais natural */}
           <Row title={selectedGenre ? `Populares em ${genreName}` : "Filmes Populares"} movies={popularList} />
           <Row title={selectedGenre ? `Aclamados pela Crítica em ${genreName}` : "Aclamados pela Crítica"} movies={topRatedList} />
           <Row title={selectedGenre ? `Novidades de ${genreName}` : "Novidades no Catálogo"} movies={newList} />

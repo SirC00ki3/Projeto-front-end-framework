@@ -1,29 +1,44 @@
 import React from 'react';
 import './Header.css';
 import logo from "../../imagens/icons/logo.png";
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom'; // Importe useNavigate
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-// Recebe novas props: searchTerm e onReset
-function Header({ onSearchSubmit, onSearchChange, searchTerm, onReset }) { 
+// Recebe searchTerm e setSearchTerm diretamente
+function Header({ searchTerm, setSearchTerm, myList }) { 
+  const navigate = useNavigate(); // Hook para mudar de página
   
   const getNavLinkClass = ({ isActive }) => {
     return isActive ? 'nav-link active-link' : 'nav-link';
   };
 
+  const handleInputChange = (e) => {
+    if (setSearchTerm) {
+      setSearchTerm(e.target.value);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Ao buscar, vai para a página inicial onde os resultados aparecem
+    navigate('/');
+  };
+
+  const handleReset = () => {
+    if (setSearchTerm) setSearchTerm('');
+  };
+
   return (
     <header className="header">
       <div className="header__left">
-        {/* Ao clicar na logo, reseta a busca */}
-        <Link to="/" onClick={onReset}>
+        <Link to="/" onClick={handleReset}>
             <img src={logo} alt="StreamFlix Logo" className="header__logo" />
         </Link>
         
         <nav className="header__nav">
           <ul>
-            {/* Ao clicar em Início, reseta a busca */}
-            <li><NavLink to="/" className={getNavLinkClass} onClick={onReset} end>Início</NavLink></li> 
+            <li><NavLink to="/" className={getNavLinkClass} onClick={handleReset} end>Início</NavLink></li> 
             <li><NavLink to="/series" className={getNavLinkClass}>Séries</NavLink></li>
             <li><NavLink to="/movies" className={getNavLinkClass}>Filmes</NavLink></li>
             <li><NavLink to="/new" className={getNavLinkClass}>Novidades</NavLink></li>
@@ -34,13 +49,12 @@ function Header({ onSearchSubmit, onSearchChange, searchTerm, onReset }) {
 
       <div className="header__right">
         <div className="header__search">
-          <form onSubmit={onSearchSubmit}>
+          <form onSubmit={handleSubmit}>
             <input 
               type="text" 
               placeholder="Buscar filmes..." 
-              // O valor agora é controlado pelo estado da HomePage
               value={searchTerm || ''} 
-              onChange={(e) => onSearchChange(e.target.value)} 
+              onChange={handleInputChange} 
             />
             <button type="submit" aria-label="Buscar"><FontAwesomeIcon icon={faSearch} /></button>
           </form>

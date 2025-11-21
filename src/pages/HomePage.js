@@ -6,16 +6,18 @@ import Footer from '../components/Footer/Footer';
 import tmdb from '../api/tmdb';
 import requests from '../api/requests';
 
-function HomePage({ myList, addToList }) { 
+// Recebe props do App.js
+function HomePage({ myList, addToList, searchTerm, setSearchTerm }) { 
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [bannerMovie, setBannerMovie] = useState(null);
   const [comedyMovies, setComedyMovies] = useState([]);
   const [horrorMovies, setHorrorMovies] = useState([]);
   const [romanceMovies, setRomanceMovies] = useState([]);
   
-  const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false); // Novo estado para controlar carregamento
 
+  // Busca os dados da Home (apenas uma vez)
   useEffect(() => {
     async function fetchMovies() {
       const trendingRequest = await tmdb.get(requests.fetchTrending);
@@ -37,41 +39,56 @@ function HomePage({ myList, addToList }) {
     fetchMovies();
   }, []);
   
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (searchTerm.trim() === '') {
-      setSearchResults([]);
-      return;
-    }
-    const request = await tmdb.get(`${requests.fetchSearch}${searchTerm}`);
-    setSearchResults(request.data.results);
-  };
+  // Efeito de Busca
+  useEffect(() => {
+    const performSearch = async () => {
+      if (searchTerm && searchTerm.trim() !== '') {
+        setIsSearching(true); // Começou a buscar
+        try {
+          const request = await tmdb.get(`${requests.fetchSearch}${searchTerm}`);
+          setSearchResults(request.data.results);
+        } catch (error) {
+          console.error("Erro na busca");
+        } finally {
+          setIsSearching(false); // Terminou
+        }
+      } else {
+        setSearchResults([]);
+        setIsSearching(false);
+      }
+    };
 
-  // NOVA FUNÇÃO: Limpa a busca e os resultados
-  const resetSearch = () => {
-    setSearchTerm('');      // Limpa o texto
-    setSearchResults([]);   // Limpa os filmes encontrados
-  };
+    // Debounce para não buscar a cada letra instantaneamente
+    const timeoutId = setTimeout(() => {
+      performSearch();
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
 
   return (
     <>
-      {/* Passamos 'searchTerm' e 'onReset' para o Header */}
       <Header 
         myList={myList} 
-        onSearchSubmit={handleSearch} 
-        onSearchChange={setSearchTerm}
         searchTerm={searchTerm} 
-        onReset={resetSearch}
+        setSearchTerm={setSearchTerm}
       />
       
-      <Hero movie={bannerMovie} addToList={addToList} />
-      
-      {searchResults.length > 0 ? (
-        <div style={{ marginTop: '20px' }}>
-            <Row title={`Resultados para "${searchTerm}"`} movies={searchResults} />
+      {/* Se tiver algo digitado na busca, mostramos a ÁREA DE BUSCA */}
+      {searchTerm ? (
+        <div style={{ marginTop: '100px', minHeight: '80vh', padding: '0 20px' }}>
+            {isSearching ? (
+                <h2 style={{color: 'white', textAlign: 'center'}}>Pesquisando por "{searchTerm}"...</h2>
+            ) : searchResults.length > 0 ? (
+                <Row title={`Resultados para "${searchTerm}"`} movies={searchResults} />
+            ) : (
+                <h2 style={{color: 'white', textAlign: 'center'}}>Nenhum resultado encontrado para "{searchTerm}"</h2>
+            )}
         </div>
       ) : (
+        /* Se NÃO tiver busca, mostra a HOME PADRÃO */
         <> 
+          <Hero movie={bannerMovie} addToList={addToList} />
           <div id="trending">
             <Row title="Em Alta Agora" movies={trendingMovies} />
           </div>
