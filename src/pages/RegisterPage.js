@@ -1,37 +1,42 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom'; // Importe Link
 import Footer from '../components/Footer/Footer';
 import logo from "../imagens/icons/logo.png"; // Importe a logo
 import './LoginPage.css';
 
-function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function RegisterPage({ onLogin }) {
+  const location = useLocation();
   const navigate = useNavigate();
+  const initialEmail = location.state?.email || '';
+  
+  const [email, setEmail] = useState(initialEmail);
+  const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
-    onLogin(email); 
-    navigate('/browse'); 
+    alert(`Conta criada para: ${email}`);
+    if (onLogin) onLogin(email);
+    navigate('/browse');
   };
 
   return (
     <div className="login-page">
-      {/* Substituímos o Header por uma div simples com a Logo */}
+      {/* Logo no topo */}
       <div className="login-header">
         <Link to="/">
           <img src={logo} alt="StreamFlix" className="login-logo" />
         </Link>
       </div>
-      
+
       <div className="login-container">
         <div className="login-box">
-          <h2>Entrar</h2>
-          <form onSubmit={handleLogin}>
+          <h2>Crie sua conta</h2>
+          <form onSubmit={handleRegister}>
+            {/* ... (campos do formulário iguais) ... */}
             <div className="input-group">
               <input 
                 type="email" 
-                placeholder="Email ou número de telefone" 
+                placeholder="Email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
@@ -46,20 +51,13 @@ function LoginPage({ onLogin }) {
                 required 
               />
             </div>
-            <button type="submit" className="login-button">Entrar</button>
+            <button type="submit" className="login-button">Cadastrar</button>
           </form>
-          
-          <div className="login-footer">
-            <p>
-              Novo por aqui? <Link to="/register">Assine agora.</Link>
-            </p>
-          </div>
         </div>
       </div>
-      
       <Footer />
     </div>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;

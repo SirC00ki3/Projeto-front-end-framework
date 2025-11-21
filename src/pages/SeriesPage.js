@@ -6,8 +6,8 @@ import tmdb from '../api/tmdb';
 import { API_KEY } from '../api/requests';
 import './SeriesPage.css';
 
-// Recebe as props de busca
-function SeriesPage({ myList, searchTerm, setSearchTerm }) {
+// Recebe user e handleLogout
+function SeriesPage({ myList, searchTerm, setSearchTerm, user, handleLogout }) {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [genreName, setGenreName] = useState('Todas');
   
@@ -47,8 +47,14 @@ function SeriesPage({ myList, searchTerm, setSearchTerm }) {
 
   return (
     <>
-      {/* Repassa as props de busca */}
-      <Header myList={myList} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      {/* Passa user e handleLogout */}
+      <Header 
+        myList={myList} 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+        user={user} 
+        handleLogout={handleLogout} 
+      />
       
       <div className="series-page-container">
         <div className="series-header">

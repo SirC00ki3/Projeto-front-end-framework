@@ -157,4 +157,35 @@
   .header__search button {
     width: 40px; /* Largura fixa para o botão da lupa */
   }
+  
+}/* Botão Sair (Estilo Premium) */
+.header__logout-button {
+  background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro discreto */
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Borda fina e elegante */
+  padding: 0 15px;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  height: 30px; /* Mesma altura da barra de busca */
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+
+.header__logout-button:hover {
+  background-color: #e50914; /* Vermelho Netflix ao passar o mouse */
+  border-color: #e50914;
+  color: white;
+}
+
+/* Ajuste para mobile */
+@media (max-width: 768px) {
+  .header__logout-button {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+  }
 }

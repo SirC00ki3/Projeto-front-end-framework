@@ -6,8 +6,8 @@ import Footer from '../components/Footer/Footer';
 import tmdb from '../api/tmdb';
 import requests from '../api/requests';
 
-// Recebe props do App.js
-function HomePage({ myList, addToList, searchTerm, setSearchTerm }) { 
+// Recebe user e handleLogout nas props
+function HomePage({ myList, addToList, searchTerm, setSearchTerm, user, handleLogout }) { 
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [bannerMovie, setBannerMovie] = useState(null);
   const [comedyMovies, setComedyMovies] = useState([]);
@@ -15,9 +15,8 @@ function HomePage({ myList, addToList, searchTerm, setSearchTerm }) {
   const [romanceMovies, setRomanceMovies] = useState([]);
   
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false); // Novo estado para controlar carregamento
+  const [isSearching, setIsSearching] = useState(false);
 
-  // Busca os dados da Home (apenas uma vez)
   useEffect(() => {
     async function fetchMovies() {
       const trendingRequest = await tmdb.get(requests.fetchTrending);
@@ -39,18 +38,17 @@ function HomePage({ myList, addToList, searchTerm, setSearchTerm }) {
     fetchMovies();
   }, []);
   
-  // Efeito de Busca
   useEffect(() => {
     const performSearch = async () => {
       if (searchTerm && searchTerm.trim() !== '') {
-        setIsSearching(true); // Começou a buscar
+        setIsSearching(true);
         try {
           const request = await tmdb.get(`${requests.fetchSearch}${searchTerm}`);
           setSearchResults(request.data.results);
         } catch (error) {
           console.error("Erro na busca");
         } finally {
-          setIsSearching(false); // Terminou
+          setIsSearching(false);
         }
       } else {
         setSearchResults([]);
@@ -58,7 +56,6 @@ function HomePage({ myList, addToList, searchTerm, setSearchTerm }) {
       }
     };
 
-    // Debounce para não buscar a cada letra instantaneamente
     const timeoutId = setTimeout(() => {
       performSearch();
     }, 500);
@@ -72,21 +69,22 @@ function HomePage({ myList, addToList, searchTerm, setSearchTerm }) {
         myList={myList} 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm}
+        // IMPORTANTE: Passa user e handleLogout para o Header
+        user={user}
+        handleLogout={handleLogout}
       />
       
-      {/* Se tiver algo digitado na busca, mostramos a ÁREA DE BUSCA */}
       {searchTerm ? (
         <div style={{ marginTop: '100px', minHeight: '80vh', padding: '0 20px' }}>
             {isSearching ? (
-                <h2 style={{color: 'white', textAlign: 'center'}}>Pesquisando por "{searchTerm}"...</h2>
+                <h2 style={{color: 'white', textAlign: 'center'}}>Pesquisando...</h2>
             ) : searchResults.length > 0 ? (
                 <Row title={`Resultados para "${searchTerm}"`} movies={searchResults} />
             ) : (
-                <h2 style={{color: 'white', textAlign: 'center'}}>Nenhum resultado encontrado para "{searchTerm}"</h2>
+                <h2 style={{color: 'white', textAlign: 'center'}}>Nenhum resultado encontrado.</h2>
             )}
         </div>
       ) : (
-        /* Se NÃO tiver busca, mostra a HOME PADRÃO */
         <> 
           <Hero movie={bannerMovie} addToList={addToList} />
           <div id="trending">
@@ -103,7 +101,6 @@ function HomePage({ myList, addToList, searchTerm, setSearchTerm }) {
           </div>
         </>
       )}
-      
       <Footer />
     </>
   );

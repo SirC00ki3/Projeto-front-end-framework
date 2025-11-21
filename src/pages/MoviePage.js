@@ -7,20 +7,18 @@ import Footer from '../components/Footer/Footer';
 import YouTube from 'react-youtube';
 import './MoviePage.css';
 
-function MoviePage({ addToList, removeFromList, myList }) {
-  // Agora pegamos também o 'type' (movie ou tv) da URL
+// Recebe user e handleLogout
+function MoviePage({ addToList, removeFromList, myList, user, handleLogout }) {
   const { type, id } = useParams(); 
-  const [content, setContent] = useState(null); // Mudei o nome de 'movie' para 'content' pois pode ser série
+  const [content, setContent] = useState(null);
   const [trailerUrl, setTrailerUrl] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Verifica se está na lista
   const isInList = myList ? myList.some((item) => item.id.toString() === id) : false;
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Usa o 'type' para buscar na rota certa (movie ou tv)
         const response = await tmdb.get(`/${type}/${id}?api_key=${API_KEY}&language=pt-BR`);
         setContent(response.data);
       } catch (error) {
@@ -33,16 +31,11 @@ function MoviePage({ addToList, removeFromList, myList }) {
   useEffect(() => {
     async function fetchTrailer() {
       try {
-        // Busca o trailer na rota certa também
         const response = await tmdb.get(`/${type}/${id}/videos?api_key=${API_KEY}`);
-        
-        // Tenta achar trailer oficial
         let video = response.data.results.find(vid => vid.type === "Trailer" && vid.site === "YouTube");
-        // Se não achar, pega qualquer video do Youtube (Teaser, Opening, etc)
         if (!video) {
             video = response.data.results.find(vid => vid.site === "YouTube");
         }
-
         if (video) {
           setTrailerUrl(video.key);
         }
@@ -69,23 +62,19 @@ function MoviePage({ addToList, removeFromList, myList }) {
 
   return (
     <>
-      <Header myList={myList} />
+      {/* Passa user e handleLogout */}
+      <Header myList={myList} user={user} handleLogout={handleLogout} />
+      
       <div className="movie-page-container" style={backgroundStyle}>
         <div className="movie-details-card">
-          {/* Usa title (filme) ou name (série) */}
           <h1 className="movie-page-title">{content.title || content.name}</h1>
-          
-          <p className="movie-page-overview">
-            {content.overview || "Sinopse não disponível em português."}
-          </p>
+          <p className="movie-page-overview">{content.overview || "Sinopse não disponível em português."}</p>
           
           <div className="movie-meta-info">
             <p className="movie-page-meta">
               Data: {content.release_date || content.first_air_date ? (content.release_date || content.first_air_date).substring(0, 4) : "N/A"}
             </p>
             <p className="movie-page-meta">Nota: {Number(content.vote_average).toFixed(1)}</p>
-            
-            {/* Mostra temporadas se for série */}
             {content.number_of_seasons && (
                 <p className="movie-page-meta" style={{color: '#46d369'}}>
                     {content.number_of_seasons} Temporada{content.number_of_seasons > 1 ? 's' : ''}
@@ -94,14 +83,12 @@ function MoviePage({ addToList, removeFromList, myList }) {
           </div>
 
           <div className="movie-page-buttons">
-            {/* Botão Assistir (Só aparece se tiver trailer) */}
             {trailerUrl ? (
               <button className="watch-button" onClick={() => setIsModalOpen(true)}>▶ Assistir Agora</button>
             ) : (
                <button className="watch-button disabled" style={{opacity: 0.5, cursor: 'not-allowed'}}>Sem Trailer</button>
             )}
 
-            {/* Botão Lista */}
             {isInList ? (
               <button className="watch-button remove-btn" style={{marginLeft: '15px', backgroundColor: '#555'}} onClick={() => removeFromList(content.id)}>
                 Remover da Lista
