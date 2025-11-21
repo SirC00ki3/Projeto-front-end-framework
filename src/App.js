@@ -10,8 +10,15 @@ import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import './App.css';
 
+// 1. Componente ProtectedRoute definido FORA da função App
+const ProtectedRoute = ({ user, children }) => {
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
 function App() {
-  // Tenta recuperar o usuário salvo. Se não tiver, inicia como null.
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('streamflix_user');
     return savedUser ? JSON.parse(savedUser) : null;
@@ -50,39 +57,54 @@ function App() {
     setMyList((prevList) => prevList.filter((movie) => movie.id !== movieId));
   };
 
-  // Agrupa as props para facilitar
   const commonProps = {
     myList,
     searchTerm,
     setSearchTerm,
-    user,         // <-- ESSENCIAL: Envia o usuário
-    handleLogout  // <-- ESSENCIAL: Envia a função de sair
-  };
-
-  // Componente de Rota Protegida (Só deixa passar se tiver user)
-  const ProtectedRoute = ({ children }) => {
-    if (!user) {
-      return <Navigate to="/" />;
-    }
-    return children;
+    user,
+    handleLogout
   };
 
   return (
     <Router>
       <div className="App">
         <Routes>
-          {/* Rota Raiz: Se logado -> Home. Se não -> Landing Page */}
+          {/* --- ROTAS PÚBLICAS (Faltavam aqui) --- */}
           <Route path="/" element={user ? <Navigate to="/browse" /> : <LandingPage />} />
-          
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/register" element={<RegisterPage onLogin={handleLogin} />} />
           
-          {/* ROTAS PROTEGIDAS */}
-          <Route path="/browse" element={<ProtectedRoute><HomePage {...commonProps} addToList={addToList} /></ProtectedRoute>} />
-          <Route path="/movies" element={<ProtectedRoute><MoviesPage {...commonProps} /></ProtectedRoute>} />
-          <Route path="/series" element={<ProtectedRoute><SeriesPage {...commonProps} /></ProtectedRoute>} />
-          <Route path="/watch/:type/:id" element={<ProtectedRoute><MoviePage {...commonProps} addToList={addToList} removeFromList={removeFromList} /></ProtectedRoute>} />
-          <Route path="/mylist" element={<ProtectedRoute><MyListPage {...commonProps} /></ProtectedRoute>} />
+          {/* --- ROTAS PROTEGIDAS --- */}
+          <Route path="/browse" element={
+            <ProtectedRoute user={user}>
+              <HomePage {...commonProps} addToList={addToList} />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/movies" element={
+            <ProtectedRoute user={user}>
+              <MoviesPage {...commonProps} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/series" element={
+            <ProtectedRoute user={user}>
+              <SeriesPage {...commonProps} />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/watch/:type/:id" element={
+            <ProtectedRoute user={user}>
+              <MoviePage {...commonProps} addToList={addToList} removeFromList={removeFromList} />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/mylist" element={
+            <ProtectedRoute user={user}>
+              <MyListPage {...commonProps} />
+            </ProtectedRoute>
+          } />
+
         </Routes>
       </div>
     </Router>

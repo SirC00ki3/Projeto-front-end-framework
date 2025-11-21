@@ -5,7 +5,8 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-function Header({ onSearchSubmit, onSearchChange, searchTerm, onReset, user, handleLogout }) { 
+// Mantemos todas as props que fizemos funcionar (busca e login)
+function Header({ searchTerm, setSearchTerm, user, handleLogout }) { 
   
   const navigate = useNavigate();
 
@@ -14,8 +15,8 @@ function Header({ onSearchSubmit, onSearchChange, searchTerm, onReset, user, han
   };
 
   const handleInputChange = (e) => {
-    if (onSearchChange) {
-      onSearchChange(e.target.value);
+    if (setSearchTerm) {
+      setSearchTerm(e.target.value);
     }
   };
 
@@ -25,7 +26,7 @@ function Header({ onSearchSubmit, onSearchChange, searchTerm, onReset, user, han
   };
 
   const handleReset = () => {
-    if (onReset) onReset();
+    if (setSearchTerm) setSearchTerm('');
   };
 
   const onLogoutClick = (e) => {
@@ -48,7 +49,7 @@ function Header({ onSearchSubmit, onSearchChange, searchTerm, onReset, user, han
             <li><NavLink to="/browse" className={getNavLinkClass} onClick={handleReset} end>Início</NavLink></li> 
             <li><NavLink to="/series" className={getNavLinkClass}>Séries</NavLink></li>
             <li><NavLink to="/movies" className={getNavLinkClass}>Filmes</NavLink></li>
-            {/* Link Novidades REMOVIDO daqui */}
+            {/* A LINHA "NOVIDADES" FOI REMOVIDA DAQUI */}
             <li><NavLink to="/mylist" className={getNavLinkClass}>Minha Lista</NavLink></li>
           </ul>
         </nav>

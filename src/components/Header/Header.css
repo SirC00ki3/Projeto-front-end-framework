@@ -1,4 +1,4 @@
-/* Container principal */
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -8,14 +8,13 @@
   left: 0;
   width: 100%;
   z-index: 100;
-  padding: 10px 50px; /* Padding vertical um pouco menor */
+  padding: 10px 50px; 
   background-color: rgba(0, 0, 0, 0.9);
   color: #fff;
   box-sizing: border-box;
   transition: background-color 0.3s ease;
 }
 
-/* --- LADO ESQUERDO --- */
 .header__left {
   display: flex;
   align-items: center;
@@ -23,10 +22,10 @@
 }
 
 .header__logo {
-  height: 70px; /* Aumentado para destacar bem a logo */
+  height: 70px; 
   width: auto;
   cursor: pointer;
-  object-fit: contain; /* Garante que a imagem não fique esticada */
+  object-fit: contain; 
 }
 
 .header__nav ul {
@@ -34,13 +33,13 @@
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 25px; /* Mais espaço entre os links */
+  gap: 25px; 
 }
 
 .nav-link {
   color: #e5e5e5;
   text-decoration: none;
-  font-size: 1.1rem; /* Aumentado */
+  font-size: 1.1rem; 
   transition: color 0.3s;
 }
 
@@ -53,45 +52,44 @@
   font-weight: bold;
 }
 
-/* --- LADO DIREITO --- */
+
 .header__right {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-/* Estilização da Barra de Busca */
+
 .header__search {
   display: flex;
   align-items: center;
 }
 
-/* O formulário agora é a "caixa" visual */
+
 .header__search form {
   display: flex;
   align-items: center;
-  background-color: #000; /* Fundo preto */
-  border: 1px solid #fff; /* Borda branca ao redor de tudo */
-  border-radius: 4px; /* Arredonda a caixa inteira */
-  padding: 5px; /* Espaço interno */
-  height: 36px; /* Altura fixa da barra completa */
+  background-color: #000; 
+  border: 1px solid #fff; 
+  border-radius: 4px; 
+  padding: 5px; 
+  height: 36px; 
   box-sizing: border-box;
   transition: border-color 0.3s;
 }
 
-/* Efeito de brilho na caixa inteira quando clica */
 .header__search form:focus-within {
   border-color: #e50914;
 }
 
 .header__search input {
-  border: none; /* Remove borda individual */
-  background-color: transparent; /* Fundo transparente */
+  border: none; 
+  background-color: transparent; 
   color: #fff;
-  outline: none; /* Remove linha azul de foco */
+  outline: none; 
   font-size: 0.9rem;
   padding: 0 10px;
-  width: 200px; /* Largura da área de texto */
+  width: 200px; 
 }
 
 .header__search button {
@@ -157,7 +155,7 @@
   .header__search button {
     width: 40px; /* Largura fixa para o botão da lupa */
   }
-  
+
 }/* Botão Sair (Estilo Premium) */
 .header__logout-button {
   background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro discreto */
