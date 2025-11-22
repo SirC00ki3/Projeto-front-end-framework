@@ -1,23 +1,37 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer/Footer';
-import logo from "../imagens/icons/logo.png"; // Importe a logo
+import logo from "../imagens/icons/logo.png";
 import './LoginPage.css';
+import { api } from '../api'; // IMPORTANTE: Verifique se o caminho para api.js está correto
 
 function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // Novo estado para erros
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    onLogin(email); 
-    navigate('/browse'); 
+    setError(''); // Limpa mensagens de erro anteriores
+
+    try {
+      // Tenta logar na API Django
+      // O primeiro parâmetro é o username. Estamos enviando o email.
+      await api.login(email, password);
+      
+      // Se chegou aqui, o token foi salvo no localStorage (dentro do api.js)
+      onLogin(email); 
+      navigate('/browse'); 
+    } catch (err) {
+      // Se a senha estiver errada ou o servidor fora do ar
+      setError('Email ou senha incorretos.');
+      console.error("Erro no login:", err);
+    }
   };
 
   return (
     <div className="login-page">
-      {/* Substituímos o Header por uma div simples com a Logo */}
       <div className="login-header">
         <Link to="/">
           <img src={logo} alt="StreamFlix" className="login-logo" />
@@ -27,11 +41,15 @@ function LoginPage({ onLogin }) {
       <div className="login-container">
         <div className="login-box">
           <h2>Entrar</h2>
+          
+          {/* Exibe mensagem de erro se houver */}
+          {error && <div style={{ color: '#e50914', marginBottom: '15px' }}>{error}</div>}
+
           <form onSubmit={handleLogin}>
             <div className="input-group">
               <input 
-                type="email" 
-                placeholder="Email ou número de telefone" 
+                type="text" // Mudei para text para aceitar username ou email
+                placeholder="Email ou usuário" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 

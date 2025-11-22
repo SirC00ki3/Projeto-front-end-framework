@@ -7,10 +7,9 @@ import LoginPage from './pages/LoginPage';
 import MoviesPage from './pages/MoviesPage';
 import SeriesPage from './pages/SeriesPage';
 import LandingPage from './pages/LandingPage';
-import RegisterPage from './pages/RegisterPage';
+import RegisterPage from './pages/RegisterPage'; // Importação da Página de Registro
 import './App.css';
 
-// 1. Componente ProtectedRoute definido FORA da função App
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
     return <Navigate to="/" />;
@@ -41,10 +40,12 @@ function App() {
     localStorage.setItem('streamflix_user', JSON.stringify(newUser));
   };
 
+  // Atualizado: Limpa também o token da API ao sair
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('streamflix_user');
     setSearchTerm('');
+    localStorage.removeItem('streamflix_user'); // Limpa usuário da UI
+    localStorage.removeItem('token'); // Limpa o Token JWT do Django (conforme definido no api.js)
   };
 
   const addToList = (movie) => {
@@ -69,9 +70,11 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* --- ROTAS PÚBLICAS (Faltavam aqui) --- */}
+          {/* --- ROTAS PÚBLICAS --- */}
           <Route path="/" element={user ? <Navigate to="/browse" /> : <LandingPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          
+          {/* Rota de Registro (Ponto 6) */}
           <Route path="/register" element={<RegisterPage onLogin={handleLogin} />} />
           
           {/* --- ROTAS PROTEGIDAS --- */}
